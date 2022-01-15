@@ -27,7 +27,6 @@ public class BlockBigTile extends PortalBlock {
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
 			ItemStack stack) {
 		EnumFacing facing =  EnumFacing.getDirectionFromEntityLiving(pos, placer).getOpposite();
-		System.out.println(facing);
 		int dx = 0;
 		int dy = 0;
 		int dz = 0;

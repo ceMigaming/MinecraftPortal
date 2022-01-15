@@ -1,45 +1,75 @@
 package com.cemi.portalreloaded.block;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
-import com.cemi.portalreloaded.client.PortalTabs;
-import com.cemi.portalreloaded.entity.EntityHEP;
-import com.cemi.portalreloaded.tileentity.TileEntityBallLauncher;
+import com.cemi.portalreloaded.utility.InventoryUtilities;
 
-import net.minecraft.block.Block;
+import me.ichun.mods.ichunutil.common.item.ItemHandler;
+import me.ichun.mods.portalgun.common.PortalGun;
+import me.ichun.mods.portalgun.common.item.ItemPortalGun;
+import me.ichun.mods.portalgun.common.portal.info.PortalInfo;
+import me.ichun.mods.portalgun.common.portal.world.PortalPlacement;
 import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PaneBlock extends PortalBlock {
-
+public class BlockFizzlerField extends PortalBlock {
 	public static final PropertyDirection FACING = BlockDirectional.FACING;
-	private final boolean ignoreSimilarity;
 
-	public PaneBlock(String name) {
-		super(Material.GLASS, name);
-		this.ignoreSimilarity = true;
+	public BlockFizzlerField() {
+		super(Material.GLASS, "fizzler_field_block");
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		setCreativeTab(PortalTabs.PORTAL_BUILDING_BLOCKS);
 	}
+	
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+		return null;
+	}
+	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
+		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+		switch (enumfacing) {
+		case DOWN:
+		case UP:
+			bb = new AxisAlignedBB(0, 7.5d / 16.d, 0, 1, 8.5d / 16.d, 1);
+			break;
+		case NORTH:
+		case SOUTH:
+			bb = new AxisAlignedBB(0, 0, 7.5d / 16.d, 1, 1, 8.5d / 16.d);
+			break;
+		case EAST:
+		case WEST:
+			bb = new AxisAlignedBB(7.5d / 16.d, 0, 0, 8.5d / 16.d, 1, 1);
+			break;
 
+		default:
+			break;
+		}
+
+		return bb;
+	}
+	
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
@@ -50,26 +80,16 @@ public class PaneBlock extends PortalBlock {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
-			EnumFacing side) {
-		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
-		Block block = iblockstate.getBlock();
-
-		if (this == PortalBlocks.glassPane || this == PortalBlocks.seemedGlassPane) {
-			if (block == PortalBlocks.glassPane || block == PortalBlocks.seemedGlassPane) {
-				return false;
-			}
-		}
-
-		return !this.ignoreSimilarity && block == this ? false
-				: super.shouldSideBeRendered(blockState, blockAccess, pos, side);
-	}
-
-	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
 		super.onBlockAdded(worldIn, pos, state);
 		this.setDefaultDirection(worldIn, pos, state);
+	}
+
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack) {
+		worldIn.setBlockState(pos,
+				state.withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer)), 2);
 	}
 
 	private void setDefaultDirection(World worldIn, BlockPos pos, IBlockState state) {
@@ -98,45 +118,39 @@ public class PaneBlock extends PortalBlock {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
-		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
-		switch (enumfacing) {
-		case DOWN:
-			bb = new AxisAlignedBB(0, 0, 0, 1, 2.d / 16.d, 1);
-			break;
-		case UP:
-			bb = new AxisAlignedBB(0, 14.d / 16.d, 0, 1, 1, 1);
-			break;
-		case NORTH:
-			bb = new AxisAlignedBB(0, 0, 0, 1, 1, 2.d / 16.d);
-			break;
-		case EAST:
-			bb = new AxisAlignedBB(14.d / 16.d, 0, 0, 1, 1, 1);
-			break;
-		case SOUTH:
-			bb = new AxisAlignedBB(0, 0, 14.d / 16.d, 1, 1, 1);
-			break;
-		case WEST:
-			bb = new AxisAlignedBB(0, 0, 0, 2.d / 16.d, 1, 1);
-			break;
+	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+		removePortal(worldIn, entityIn);
+	}
+	
+	public void removePortal(World worldIn, Entity entityIn) {
+		if (worldIn.isRemote)
+			return;
+		if (!(entityIn instanceof EntityPlayer)) {
+			entityIn.setDead();
+			return;
+		}
+		EntityPlayer player = (EntityPlayer) entityIn;
+		int slot = InventoryUtilities.findItem(player.inventory, PortalGun.itemPortalGun);
+		if (slot == -1)
+			return;
+		ItemStack portalGun = player.inventory.getStackInSlot(slot);
+		NBTTagCompound NBT = portalGun.getTagCompound();
 
-		default:
-			break;
+		HashSet<PortalInfo> infoHS = PortalGun.eventHandlerServer.getWorldSaveData(player.dimension).portalList;
+		ArrayList<PortalInfo> infoList = new ArrayList<PortalInfo>();
+
+		for (final PortalInfo info : infoHS) {
+			if (info.uuid.equals(NBT.getString("uuid")) && info.channelName.equals(NBT.getString("channelName"))) {
+				infoList.add(info);
+			}
 		}
 
-		return bb;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer,
-			ItemStack stack) {
-		if (placer.isSneaking())
-			worldIn.setBlockState(pos,
-					state.withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer).getOpposite()), 2);
-		else
-			worldIn.setBlockState(pos, state.withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer)),
-					2);
+		for (final PortalInfo info : infoList) {
+			PortalPlacement portalPlacement = info.getPortalPlacement(player.world);
+			if (portalPlacement != null) {
+				portalPlacement.remove(BlockPos.ORIGIN);
+			}
+		}
 	}
 
 	@Override

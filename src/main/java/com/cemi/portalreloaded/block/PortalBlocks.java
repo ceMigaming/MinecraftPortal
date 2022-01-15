@@ -14,7 +14,9 @@ public class PortalBlocks {
 	public static GlassBlock seemedGlassBlock = new GlassBlock("glass_block_seemed");
 	public static PaneBlock glassPane = new PaneBlock("glass_pane");
 	public static PaneBlock seemedGlassPane = new PaneBlock("glass_pane_seemed");
-
+	public static BlockFizzlerField fizzlerField = new BlockFizzlerField();
+	
+	
 	// CONCRETE TILES
 	public static PortalBlock smallConcreteTile = new PortalBlock(Material.ROCK, "small_concrete_tile");
 	public static PortalBlock mediumConcreteTile = new PortalBlock(Material.ROCK, "medium_concrete_tile");
@@ -57,7 +59,9 @@ public class PortalBlocks {
 			metalBigTile,
 			// GLASS
 			glassBlock, seemedGlassBlock,
-			glassPane, seemedGlassPane
+			glassPane, seemedGlassPane,
+			// Fizzler
+			fizzlerField
 			};
 
 	public static void register(IForgeRegistry<Block> registry) {

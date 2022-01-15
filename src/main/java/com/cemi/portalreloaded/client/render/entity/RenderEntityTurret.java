@@ -17,7 +17,7 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 	private static final ResourceLocation texture = new ResourceLocation(PortalReloaded.MODID,
 			"textures/entity/turret.png");
 	private static ModelBase model = new TurretModel();
-	
+
 	public RenderEntityTurret(RenderManager renderManager) {
 		super(renderManager, model, 1.0f);
 	}
@@ -26,13 +26,20 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 	protected boolean canRenderName(EntityTurret entity) {
 		return false;
 	}
-	
+
+	float t, m;
+
 	@Override
 	public void doRender(EntityTurret entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		System.out.println(entityYaw);
+		float speed = 0.075f;
+		t += m * partialTicks * speed;
+		if(t <= -1) m = 1;
+		if(t >= 2) m = -1;
+		((TurretModel)model).openLeftArm(t);
+		((TurretModel)model).openRightArm(t);
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
-	
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityTurret entity) {
 		return texture;

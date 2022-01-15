@@ -4,6 +4,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
 // Made with Blockbench 4.1.1
 // Exported for Minecraft version 1.7 - 1.12
@@ -256,6 +257,13 @@ public class TurretModel extends ModelBase {
 		buddy.render(f5);
 		erms.render(f5);
 		legos.render(f5);
+	}
+	
+	public void openLeftArm(float t) {
+		this.lefterm.offsetX = (float) MathHelper.clampedLerp(0, 4.d/16.d, t);
+	}
+	public void openRightArm(float t) {
+		this.rajterm.offsetX = (float) MathHelper.clampedLerp(0, -4.d/16.d, t);
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
