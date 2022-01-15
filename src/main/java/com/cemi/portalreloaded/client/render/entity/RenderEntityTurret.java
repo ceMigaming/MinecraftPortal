@@ -28,15 +28,21 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 	}
 
 	float t, m;
-
+	
 	@Override
 	public void doRender(EntityTurret entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		float speed = 0.075f;
 		t += m * partialTicks * speed;
-		if(t <= -1) m = 1;
-		if(t >= 2) m = -1;
-		((TurretModel)model).openLeftArm(t);
-		((TurretModel)model).openRightArm(t);
+		if(t <= -1) {
+			entity.shouldOpen = true;
+			m = 1;
+		}
+		if(t >= 2) {
+			entity.shouldOpen = false;
+			m = -1;
+		}
+		System.out.println(entity.shouldOpen);
+		
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 

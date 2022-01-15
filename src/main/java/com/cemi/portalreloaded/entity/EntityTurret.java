@@ -10,6 +10,10 @@ import net.minecraft.world.World;
 
 public class EntityTurret extends EntityLivingBase {
 
+	public boolean shouldOpen = false;
+	public boolean isOpen = false;
+	public float openingSpeed = 0.1f;
+	
 	public EntityTurret(World worldIn) {
 		super(worldIn);
 	}

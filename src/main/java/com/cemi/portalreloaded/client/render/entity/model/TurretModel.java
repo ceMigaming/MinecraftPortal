@@ -1,5 +1,7 @@
 package com.cemi.portalreloaded.client.render.entity.model;
 
+import com.cemi.portalreloaded.entity.EntityTurret;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -37,6 +39,8 @@ public class TurretModel extends ModelBase {
 	private final ModelRenderer cube_r16;
 	private final ModelRenderer cube_r17;
 	private final ModelRenderer cube_r18;
+
+	private float openingTime = 0;
 
 	public TurretModel() {
 		textureWidth = 53;
@@ -253,22 +257,43 @@ public class TurretModel extends ModelBase {
 	}
 
 	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		buddy.render(f5);
-		erms.render(f5);
-		legos.render(f5);
+	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+			float headPitch, float scale) {
+		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+		buddy.render(scale);
+		erms.render(scale);
+		legos.render(scale);
 	}
-	
-	public void openLeftArm(float t) {
-		this.lefterm.offsetX = (float) MathHelper.clampedLerp(0, 4.d/16.d, t);
+
+	private void openLeftArm(float t) {
+		this.lefterm.offsetX = (float) MathHelper.clampedLerp(0, 4.d / 16.d, t);
 	}
-	public void openRightArm(float t) {
-		this.rajterm.offsetX = (float) MathHelper.clampedLerp(0, -4.d/16.d, t);
+
+	private void openRightArm(float t) {
+		this.rajterm.offsetX = (float) MathHelper.clampedLerp(0, -4.d / 16.d, t);
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
+	}
+
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+			float headPitch, float scaleFactor, Entity entityIn) {
+		EntityTurret turret = (EntityTurret) entityIn;
+		if (turret.shouldOpen && !turret.isOpen) {
+			if (openingTime >= 1)
+				turret.isOpen = true;
+			openingTime += turret.openingSpeed;
+		} else if(turret.isOpen) {
+			if(openingTime <= 0)
+				turret.isOpen = false;
+			openingTime -= turret.openingSpeed;
+		}
+		openLeftArm(openingTime);
+		openRightArm(openingTime);
+
 	}
 }
