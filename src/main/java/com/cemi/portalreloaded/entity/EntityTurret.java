@@ -19,6 +19,12 @@ public class EntityTurret extends EntityLivingBase {
 	}
 
 	@Override
+	public void onUpdate() {
+		
+		super.onUpdate();
+	}
+	
+	@Override
 	public Iterable<ItemStack> getArmorInventoryList() {
 		return Collections.EMPTY_LIST;
 	}
@@ -27,7 +33,7 @@ public class EntityTurret extends EntityLivingBase {
 	public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
 		return ItemStack.EMPTY;
 	}
-
+	
 	@Override
 	public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
 		

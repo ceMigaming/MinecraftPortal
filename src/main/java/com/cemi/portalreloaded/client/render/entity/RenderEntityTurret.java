@@ -20,6 +20,7 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 
 	public RenderEntityTurret(RenderManager renderManager) {
 		super(renderManager, model, 1.0f);
+		shadowSize = 1.0f;
 	}
 
 	@Override
@@ -27,22 +28,8 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 		return false;
 	}
 
-	float t, m;
-	
 	@Override
 	public void doRender(EntityTurret entity, double x, double y, double z, float entityYaw, float partialTicks) {
-		float speed = 0.075f;
-		t += m * partialTicks * speed;
-		if(t <= -1) {
-			entity.shouldOpen = true;
-			m = 1;
-		}
-		if(t >= 2) {
-			entity.shouldOpen = false;
-			m = -1;
-		}
-		System.out.println(entity.shouldOpen);
-		
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 

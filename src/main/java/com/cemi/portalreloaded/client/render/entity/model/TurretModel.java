@@ -287,7 +287,7 @@ public class TurretModel extends ModelBase {
 			if (openingTime >= 1)
 				turret.isOpen = true;
 			openingTime += turret.openingSpeed;
-		} else if(turret.isOpen) {
+		} else if(!turret.shouldOpen && turret.isOpen) {
 			if(openingTime <= 0)
 				turret.isOpen = false;
 			openingTime -= turret.openingSpeed;
