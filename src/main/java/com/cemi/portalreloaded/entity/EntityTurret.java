@@ -34,7 +34,6 @@ public class EntityTurret extends EntityLivingBase {
 				if(isOpen) {
 					shootingTimer = (shootingTimer + 1) % 10;
 					if(shootingTimer == 0) {
-						System.out.println("TEST");
 						System.out.println(player.attackEntityFrom(DamageSource.GENERIC, 3.f));
 						//player.knockBack(this, 2.f, 0.d, 0.d);
 					}

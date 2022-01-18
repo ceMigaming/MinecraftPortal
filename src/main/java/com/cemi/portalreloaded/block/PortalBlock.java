@@ -61,12 +61,14 @@ public class PortalBlock extends Block {
 
 		Vec3d posVec = new Vec3d(pos);
 		Vec3d entVec = projectile.shooter.getPositionVector();
+		System.out.println(entVec.subtract(posVec).normalize());
 		RayTraceResult result = EntityHelper.rayTraceBlocks(worldIn,
 				posVec.distanceTo(projectile.shooter.getPositionVector()),
 				posVec.add(entVec.subtract(posVec).normalize()), entVec, PortalGun.config.canFireThroughLiquid == 0,
 				false, false, false);
 		if (result != null) {
 			if (worldIn.getBlockState(result.getBlockPos()).getMaterial() == Material.GLASS)
+				System.out.println(worldIn.getBlockState(result.getBlockPos()).getBlock());
 				if (projectile.portalInfo != null) {
 					projectile.portalHeight = 1;
 					PortalPlacement portalPlacement = projectile.portalInfo
@@ -74,6 +76,7 @@ public class PortalBlock extends Block {
 					if (portalPlacement != null) {
 						portalPlacement.remove(BlockPos.ORIGIN);
 					}
+					projectile.portalInfo = null;
 				}
 		}
 	}
