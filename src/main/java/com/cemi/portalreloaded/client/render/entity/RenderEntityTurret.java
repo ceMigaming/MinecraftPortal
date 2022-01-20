@@ -20,7 +20,7 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 
 	public RenderEntityTurret(RenderManager renderManager) {
 		super(renderManager, model, 1.0f);
-		shadowSize = 1.0f;
+		shadowSize = .5f;
 	}
 
 	@Override
@@ -30,6 +30,18 @@ public class RenderEntityTurret extends RenderLivingBase<EntityTurret> {
 
 	@Override
 	public void doRender(EntityTurret entity, double x, double y, double z, float entityYaw, float partialTicks) {
+//		GlStateManager.pushMatrix();
+//		GlStateManager.rotate(entity.deathTime * 90.0F / 20.0F, 1.0F, 0.0F, 0.0F);
+//		GlStateManager.translate((float) x, (float) y+1.5F, (float) z);
+//		GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+//		GlStateManager.rotate(entity.prevRotationYaw, 0.0F, 1.0F, 0.0F);
+//		GlStateManager.scale(0.06F, 0.06F, 0.06F);
+//		bindTexture(texture);
+//		model.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, entity);
+//		model.render(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1F);
+//		GlStateManager.disableRescaleNormal();
+//		GlStateManager.enableLighting();
+//		GlStateManager.popMatrix();
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 

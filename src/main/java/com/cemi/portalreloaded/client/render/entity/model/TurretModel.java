@@ -45,7 +45,7 @@ public class TurretModel extends ModelBase {
 	public TurretModel() {
 		textureWidth = 53;
 		textureHeight = 54;
-
+		
 		buddy = new ModelRenderer(this);
 		buddy.setRotationPoint(0.0F, 24.0F, 0.0F);
 
@@ -285,13 +285,14 @@ public class TurretModel extends ModelBase {
 		EntityTurret turret = (EntityTurret) entityIn;
 		if (turret.shouldOpen && !turret.isOpen) {
 			if (openingTime >= 1)
-				turret.isOpen = true;
+				openingTime = 1;
 			openingTime += turret.openingSpeed;
-		} else if(!turret.shouldOpen && turret.isOpen) {
+		} else if(!turret.shouldOpen) {
 			if(openingTime <= 0)
-				turret.isOpen = false;
+				openingTime = 0;
 			openingTime -= turret.openingSpeed;
 		}
+		System.out.println(openingTime);
 		openLeftArm(openingTime);
 		openRightArm(openingTime);
 
